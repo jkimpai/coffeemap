@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <h1> campus coffee shops </h1>
+    <div id="container">
+        <div id="map"></div>
+        <div id="elm"></div>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbRJ6H437IYRLSaFdypeb0Axytzyo2KXw">
+    </script>
+    <script type="text/javascript">
+        var div = document.getElementById('elm');
+        var div2 = document.getElementById('info');
+        var info;
+
+        var map = Elm.Main.embed(div);
+
+        var uchicago = new google.maps.LatLng(41.789, -87.5987);
+        var gmap = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: uchicago
+        });
+
+        function loadShop(sid) {
+            var saved = localStorage.getItem(sid);
+            var shop = saved == null ? [] : JSON.parse(saved);
+            console.log("loaded", shop);
+            return shop;
+        }
+
+        function saveShop(shopList) {
+            var sid = shopList[1];
+            var s = JSON.stringify(shopList);
+            localStorage.setItem(sid, s);
+            console.log("saved", shopList[1]);
+        }
+
+        map.ports.requestShop.subscribe(function(sid){
+            console.log("request", sid);
+            var shop = loadShop(sid);
+            map.ports.receiveShop.send(shop);
+        });
+
+        map.ports.saveShop.subscribe(function(shop) {
+            console.log("save", shop);
+            saveShop(shop);
+        });
+
+        var shops = [
+            [0, '', 0, 0, '', 0],
+            [1, 'cobb', 41.788993, -87.600852, "Cobb Cafe", 0],
+            [2, 'exlib', 41.792214, -87.599934, "Ex Libris", 0],
+            [3, 'hallowed', 41.791235, -87.598319, "Hallowed Grounds", 0],
+            [4, 'cshop', 41.791238, -87.598280, "Einstein Bro's (C-Shop)", 0],
+            [5, 'miriams',41.793751, -87.600099, "Miriam's Cafe at the Smart", 0],
+            [6, 'harper', 41.787987, -87.599560, "Harper Cafe", 0],
+            [7, 'plein', 41.790026, -87.596066, "Plein Air", 0],
+            [8, 'div', 41.788982, -87.599999, "Grounds of Being", 0],
+            [9, 'dollop', 41.794797, -87.598314, "Dollop Coffee Co", 0]
+        ];
+
+        var infoWindow = new google.maps.InfoWindow(), marker, i;
+        var markers = [];
+
+        for (var i = 0; i < shops.length; i++) {
+            var goldStar = {
+                url: 'icons/star.svg',
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(20,20)
+            };
+
+            var cupIcon = 
+            cupIcon = {
+                url: 'icons/fillcup.svg',
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(20,20)
+            };
+
+            markers[i] = new google.maps.Marker({ 
+                position: {lat: shops[i][2], lng: shops[i][3]},
+                icon: cupIcon,
+                label: "" + i + "",
+                map: gmap
+            });
+
+            google.maps.event.addListener(markers[i], 'click', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(shops[i][4]);
+                    infoWindow.open(map, markers[i]);
+                    gmap.setZoom(18);
+                    gmap.setCenter({lat: shops[i][2], lng: shops[i][3]})
+                    map.ports.gotShop.send(shops[i][1]);
+                }
+            })(marker, i));
+
+            google.maps.event.addListener(markers[i], 'dblclick', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(shops[i][4]);
+                    infoWindow.open(map, markers[i]);
+                    if (shops[i][5]) {
+                        markers[i].setIcon(cupIcon)
+                    } else {
+                        markers[i].setIcon(goldStar)
+                    }
+                    shops[i][5] = !shops[i][5];
+                    gmap.setZoom(18);
+                    gmap.setCenter({lat: shops[i][2], lng: shops[i][3]})
+                    map.ports.gotShop.send(shops[i][1]);
+                }
+            })(marker, i));
+        } 
+
+        map.ports.moveMap.subscribe(function(gmPos) {
+            console.log("received", gmPos);
+            var myLatlng = new google.maps.LatLng(gmPos);
+            gmap.setCenter(myLatlng);
+        });
+
+        map.ports.reset.subscribe(function(gmPos) {
+            console.log("received", gmPos);
+            var myLatlng = new google.maps.LatLng(gmPos);
+            infoWindow.setMap(null);
+            gmap.setCenter(myLatlng);
+            gmap.setZoom(16);
+        });
+
+        map.ports.hardReset.subscribe(function(gmPos) {
+            var myLatlng = new google.maps.LatLng(gmPos);
+            infoWindow.setMap(null);
+            gmap.setCenter(myLatlng);
+            gmap.setZoom(16);
+            localStorage.clear();
+        });
+
+        gmap.addListener('drag', function() {
+            var newPos = {
+            lat: gmap.getCenter().lat(),
+            lng: gmap.getCenter().lng()
+            };
+            map.ports.mapMoved.send(newPos);
+        });
+        map.ports.getShop.subscribe(function(sNum) {
+            console.log("get snum of", sNum);
+            console.log("get", shops[sNum][0]);
+            gmap.setZoom(18); 
+            gmap.setCenter({lat: shops[sNum][2], lng: shops[sNum][3]});
+            google.maps.event.trigger(markers[sNum], 'click');
+            //menu.ports.doChange.send(shop);
+        });
+
+        map.ports.star.subscribe(function(sNum) {
+            console.log("get", shops[sNum][0]);
+            gmap.setZoom(18); 
+            gmap.setCenter({lat: shops[sNum][2], lng: shops[sNum][3]});
+            google.maps.event.trigger(markers[sNum], 'dblclick');
+        });
+    </script>
+  </body>
+</html>

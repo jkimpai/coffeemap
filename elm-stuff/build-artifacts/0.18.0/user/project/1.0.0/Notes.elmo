@@ -1,0 +1,62 @@
+var _user$project$Notes$delete = F2(
+	function (shop, id) {
+		return _elm_lang$core$Native_Utils.update(
+			shop,
+			{
+				notes: A2(
+					_elm_lang$core$List$filter,
+					function (t) {
+						return !_elm_lang$core$Native_Utils.eq(t.id, id);
+					},
+					shop.notes)
+			});
+	});
+var _user$project$Notes$updateEntry = F3(
+	function (shop, id, str) {
+		var updateEntry = function (t) {
+			return _elm_lang$core$Native_Utils.eq(t.id, id) ? _elm_lang$core$Native_Utils.update(
+				t,
+				{description: str}) : t;
+		};
+		return _elm_lang$core$Native_Utils.update(
+			shop,
+			{
+				notes: A2(_elm_lang$core$List$map, updateEntry, shop.notes)
+			});
+	});
+var _user$project$Notes$editingEntry = F3(
+	function (shop, id, isEditing) {
+		var updateEntry = function (t) {
+			return _elm_lang$core$Native_Utils.eq(t.id, id) ? _elm_lang$core$Native_Utils.update(
+				t,
+				{editing: isEditing}) : t;
+		};
+		return _elm_lang$core$Native_Utils.update(
+			shop,
+			{
+				notes: A2(_elm_lang$core$List$map, updateEntry, shop.notes)
+			});
+	});
+var _user$project$Notes$updateField = F2(
+	function (shop, str) {
+		return _elm_lang$core$Native_Utils.update(
+			shop,
+			{field: str});
+	});
+var _user$project$Notes$newEntry = F2(
+	function (desc, id) {
+		return {description: desc, editing: false, id: id};
+	});
+var _user$project$Notes$addEntry = function (shop) {
+	var newNotes = A2(
+		_elm_lang$core$Basics_ops['++'],
+		shop.notes,
+		{
+			ctor: '::',
+			_0: A2(_user$project$Notes$newEntry, shop.field, shop.eid),
+			_1: {ctor: '[]'}
+		});
+	return _elm_lang$core$Native_Utils.update(
+		shop,
+		{field: '', eid: shop.eid + 1, notes: newNotes});
+};

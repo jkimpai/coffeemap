@@ -1,0 +1,757 @@
+var _user$project$Data$getNum = function (id) {
+	var _p0 = id;
+	switch (_p0) {
+		case 'cobb':
+			return 1;
+		case 'exlib':
+			return 2;
+		case 'hallowed':
+			return 3;
+		case 'cshop':
+			return 4;
+		case 'miriams':
+			return 5;
+		case 'harper':
+			return 6;
+		case 'plein':
+			return 7;
+		case 'div':
+			return 8;
+		case 'dollop':
+			return 9;
+		default:
+			return 0;
+	}
+};
+var _user$project$Data$notesToString = function (notes) {
+	var foo = F2(
+		function (ns, acc) {
+			foo:
+			while (true) {
+				var _p1 = ns;
+				if (_p1.ctor === '[]') {
+					return acc;
+				} else {
+					var _v2 = _p1._1,
+						_v3 = A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc,
+						A2(_elm_lang$core$Basics_ops['++'], _p1._0.description, ','));
+					ns = _v2;
+					acc = _v3;
+					continue foo;
+				}
+			}
+		});
+	return A2(foo, notes, '');
+};
+var _user$project$Data$toStringList = function (shp) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Basics$toString(shp.num),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: shp.id,
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: shp.name,
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: _elm_lang$core$Basics$toString(shp.pos.lat),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Basics$toString(shp.pos.lng),
+							_1: {ctor: '[]'}
+						},
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							{
+								ctor: '::',
+								_0: shp.loc,
+								_1: {ctor: '[]'}
+							},
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								{
+									ctor: '::',
+									_0: shp.field,
+									_1: {ctor: '[]'}
+								},
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									{
+										ctor: '::',
+										_0: _elm_lang$core$Basics$toString(shp.rating),
+										_1: {ctor: '[]'}
+									},
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										{
+											ctor: '::',
+											_0: _user$project$Data$notesToString(shp.notes),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$core$Basics$toString(shp.eid),
+											_1: {ctor: '[]'}
+										})))))))));
+};
+var _user$project$Data$newEntry = F2(
+	function (desc, id) {
+		return {description: desc, editing: false, id: id};
+	});
+var _user$project$Data$stringToNotes = function (str) {
+	var strList = A2(_elm_lang$core$String$split, ',', str);
+	var len = _elm_lang$core$List$length(strList);
+	var foo = F2(
+		function (i, strs) {
+			var _p2 = strs;
+			if (_p2.ctor === '[]') {
+				return {ctor: '[]'};
+			} else {
+				if ((_p2._0 === '') && (_p2._1.ctor === '[]')) {
+					return {ctor: '[]'};
+				} else {
+					var newEntr = A2(_user$project$Data$newEntry, _p2._0, i);
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: newEntr,
+							_1: {ctor: '[]'}
+						},
+						A2(foo, i + 1, _p2._1));
+				}
+			}
+		});
+	return A2(foo, 0, strList);
+};
+var _user$project$Data$getInt = F2(
+	function (n, arr) {
+		var _p3 = A2(_elm_lang$core$Array$get, n, arr);
+		if (_p3.ctor === 'Just') {
+			var _p4 = _elm_lang$core$String$toInt(_p3._0);
+			if (_p4.ctor === 'Ok') {
+				return _p4._0;
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+	});
+var _user$project$Data$getFav = F2(
+	function (n, arr) {
+		var _p5 = A2(_user$project$Data$getInt, n, arr);
+		if (_p5 === 0) {
+			return false;
+		} else {
+			return true;
+		}
+	});
+var _user$project$Data$getFloat = F2(
+	function (n, arr) {
+		var _p6 = A2(_elm_lang$core$Array$get, n, arr);
+		if (_p6.ctor === 'Just') {
+			var _p7 = _elm_lang$core$String$toFloat(_p6._0);
+			if (_p7.ctor === 'Ok') {
+				return _p7._0;
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+	});
+var _user$project$Data$getStr = F2(
+	function (n, arr) {
+		var _p8 = A2(_elm_lang$core$Array$get, n, arr);
+		if (_p8.ctor === 'Just') {
+			return _p8._0;
+		} else {
+			return '';
+		}
+	});
+var _user$project$Data$fromStringList = function (shp) {
+	var shopInfo = _elm_lang$core$Array$fromList(shp);
+	var notes = _user$project$Data$stringToNotes(
+		A2(_user$project$Data$getStr, 8, shopInfo));
+	return _user$project$SharedModels$CoffeeShop(
+		A2(_user$project$Data$getInt, 0, shopInfo))(
+		A2(_user$project$Data$getStr, 1, shopInfo))(
+		A2(_user$project$Data$getStr, 2, shopInfo))(
+		A2(
+			_user$project$SharedModels$GMPos,
+			A2(_user$project$Data$getFloat, 3, shopInfo),
+			A2(_user$project$Data$getFloat, 4, shopInfo)))(
+		A2(_user$project$Data$getStr, 5, shopInfo))(
+		A2(_user$project$Data$getStr, 6, shopInfo))(
+		A2(_user$project$Data$getInt, 7, shopInfo))(notes)(
+		A2(_user$project$Data$getInt, 9, shopInfo))(
+		A2(_user$project$Data$getFav, 10, shopInfo));
+};
+var _user$project$Data$noShop = _user$project$SharedModels$CoffeeShop(0)('')('')(
+	A2(_user$project$SharedModels$GMPos, 0, 0))('')('')(0)(
+	{ctor: '[]'})(0)(false);
+var _user$project$Data$setShops = function (arr) {
+	var len = _elm_lang$core$Array$length(arr);
+	var foo = F2(
+		function (i, out) {
+			foo:
+			while (true) {
+				if (_elm_lang$core$Native_Utils.eq(i, len)) {
+					return out;
+				} else {
+					var shopInfo = _elm_lang$core$Array$fromList(
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							{ctor: '[]'},
+							A2(_elm_lang$core$Array$get, i, arr)));
+					var notes = _user$project$Data$stringToNotes(
+						A2(_user$project$Data$getStr, 8, shopInfo));
+					var _v11 = i + 1,
+						_v12 = A2(
+						_elm_lang$core$Array$push,
+						_user$project$SharedModels$CoffeeShop(i)(
+							A2(_user$project$Data$getStr, 1, shopInfo))(
+							A2(_user$project$Data$getStr, 2, shopInfo))(
+							A2(
+								_user$project$SharedModels$GMPos,
+								A2(_user$project$Data$getFloat, 3, shopInfo),
+								A2(_user$project$Data$getFloat, 4, shopInfo)))(
+							A2(_user$project$Data$getStr, 5, shopInfo))(
+							A2(_user$project$Data$getStr, 6, shopInfo))(
+							A2(_user$project$Data$getInt, 7, shopInfo))(notes)(
+							A2(_user$project$Data$getInt, 9, shopInfo))(
+							A2(_user$project$Data$getFav, 10, shopInfo)),
+						out);
+					i = _v11;
+					out = _v12;
+					continue foo;
+				}
+			}
+		});
+	return A2(
+		foo,
+		1,
+		_elm_lang$core$Array$fromList(
+			{
+				ctor: '::',
+				_0: _user$project$Data$noShop,
+				_1: {ctor: '[]'}
+			}));
+};
+var _user$project$Data$getCS = F2(
+	function (id, shops) {
+		var _p9 = A2(
+			_elm_lang$core$Array$get,
+			_user$project$Data$getNum(id),
+			shops);
+		if (_p9.ctor === 'Just') {
+			return _p9._0;
+		} else {
+			return _user$project$Data$noShop;
+		}
+	});
+var _user$project$Data$shopsArr = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: {
+			ctor: '::',
+			_0: 'num',
+			_1: {
+				ctor: '::',
+				_0: 'id',
+				_1: {
+					ctor: '::',
+					_0: 'name',
+					_1: {
+						ctor: '::',
+						_0: 'lat',
+						_1: {
+							ctor: '::',
+							_0: 'lng',
+							_1: {
+								ctor: '::',
+								_0: 'location',
+								_1: {
+									ctor: '::',
+									_0: 'field',
+									_1: {
+										ctor: '::',
+										_0: 'rating',
+										_1: {
+											ctor: '::',
+											_0: '',
+											_1: {
+												ctor: '::',
+												_0: 'eid',
+												_1: {
+													ctor: '::',
+													_0: 'favorite',
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		_1: {
+			ctor: '::',
+			_0: {
+				ctor: '::',
+				_0: '1',
+				_1: {
+					ctor: '::',
+					_0: 'cobb',
+					_1: {
+						ctor: '::',
+						_0: 'Cobb Coffee Shop',
+						_1: {
+							ctor: '::',
+							_0: '41.788993',
+							_1: {
+								ctor: '::',
+								_0: '-87.600852',
+								_1: {
+									ctor: '::',
+									_0: 'Cobb Hall',
+									_1: {
+										ctor: '::',
+										_0: '',
+										_1: {
+											ctor: '::',
+											_0: '0',
+											_1: {
+												ctor: '::',
+												_0: '',
+												_1: {
+													ctor: '::',
+													_0: '0',
+													_1: {
+														ctor: '::',
+														_0: '0',
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '::',
+					_0: '2',
+					_1: {
+						ctor: '::',
+						_0: 'exlib',
+						_1: {
+							ctor: '::',
+							_0: 'Ex Libris Cafe',
+							_1: {
+								ctor: '::',
+								_0: '41.792214',
+								_1: {
+									ctor: '::',
+									_0: '-87.599934',
+									_1: {
+										ctor: '::',
+										_0: 'Regenstein Library',
+										_1: {
+											ctor: '::',
+											_0: '',
+											_1: {
+												ctor: '::',
+												_0: '0',
+												_1: {
+													ctor: '::',
+													_0: '',
+													_1: {
+														ctor: '::',
+														_0: '0',
+														_1: {
+															ctor: '::',
+															_0: '0',
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '::',
+						_0: '3',
+						_1: {
+							ctor: '::',
+							_0: 'hallowed',
+							_1: {
+								ctor: '::',
+								_0: 'Hallowed Grounds',
+								_1: {
+									ctor: '::',
+									_0: '41.791235',
+									_1: {
+										ctor: '::',
+										_0: '-87.598319',
+										_1: {
+											ctor: '::',
+											_0: 'Reynold\'s Club 2nd Floor',
+											_1: {
+												ctor: '::',
+												_0: '',
+												_1: {
+													ctor: '::',
+													_0: '0',
+													_1: {
+														ctor: '::',
+														_0: '',
+														_1: {
+															ctor: '::',
+															_0: '0',
+															_1: {
+																ctor: '::',
+																_0: '0',
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '::',
+							_0: '4',
+							_1: {
+								ctor: '::',
+								_0: 'cshop',
+								_1: {
+									ctor: '::',
+									_0: 'Einstein Bros (C-Shop)',
+									_1: {
+										ctor: '::',
+										_0: '41.791238',
+										_1: {
+											ctor: '::',
+											_0: '-87.598280',
+											_1: {
+												ctor: '::',
+												_0: 'Reynold\'s Club 1st Floor',
+												_1: {
+													ctor: '::',
+													_0: '',
+													_1: {
+														ctor: '::',
+														_0: '0',
+														_1: {
+															ctor: '::',
+															_0: '',
+															_1: {
+																ctor: '::',
+																_0: '0',
+																_1: {
+																	ctor: '::',
+																	_0: '0',
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '::',
+								_0: '5',
+								_1: {
+									ctor: '::',
+									_0: 'miriams',
+									_1: {
+										ctor: '::',
+										_0: 'Miriam\'s Cafe at the Smart',
+										_1: {
+											ctor: '::',
+											_0: '41.793751',
+											_1: {
+												ctor: '::',
+												_0: '-87.600099',
+												_1: {
+													ctor: '::',
+													_0: 'Smart Museum of Art',
+													_1: {
+														ctor: '::',
+														_0: '',
+														_1: {
+															ctor: '::',
+															_0: '0',
+															_1: {
+																ctor: '::',
+																_0: '',
+																_1: {
+																	ctor: '::',
+																	_0: '0',
+																	_1: {
+																		ctor: '::',
+																		_0: '0',
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '::',
+									_0: '6',
+									_1: {
+										ctor: '::',
+										_0: 'harper',
+										_1: {
+											ctor: '::',
+											_0: 'Harper Cafe',
+											_1: {
+												ctor: '::',
+												_0: '41.787987',
+												_1: {
+													ctor: '::',
+													_0: '-87.599560',
+													_1: {
+														ctor: '::',
+														_0: 'Harper Memorial Library',
+														_1: {
+															ctor: '::',
+															_0: '',
+															_1: {
+																ctor: '::',
+																_0: '0',
+																_1: {
+																	ctor: '::',
+																	_0: '',
+																	_1: {
+																		ctor: '::',
+																		_0: '0',
+																		_1: {
+																			ctor: '::',
+																			_0: '0',
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '::',
+										_0: '7',
+										_1: {
+											ctor: '::',
+											_0: 'plein',
+											_1: {
+												ctor: '::',
+												_0: 'Plein Air Cafe',
+												_1: {
+													ctor: '::',
+													_0: '41.790026',
+													_1: {
+														ctor: '::',
+														_0: '-87.596066',
+														_1: {
+															ctor: '::',
+															_0: 'Seminary Co-op Bookstore',
+															_1: {
+																ctor: '::',
+																_0: '',
+																_1: {
+																	ctor: '::',
+																	_0: '0',
+																	_1: {
+																		ctor: '::',
+																		_0: '',
+																		_1: {
+																			ctor: '::',
+																			_0: '0',
+																			_1: {
+																				ctor: '::',
+																				_0: '0',
+																				_1: {ctor: '[]'}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									_1: {
+										ctor: '::',
+										_0: {
+											ctor: '::',
+											_0: '8',
+											_1: {
+												ctor: '::',
+												_0: 'div',
+												_1: {
+													ctor: '::',
+													_0: 'Grounds of Being',
+													_1: {
+														ctor: '::',
+														_0: '41.788982',
+														_1: {
+															ctor: '::',
+															_0: '-87.599999',
+															_1: {
+																ctor: '::',
+																_0: 'Divinity School',
+																_1: {
+																	ctor: '::',
+																	_0: '',
+																	_1: {
+																		ctor: '::',
+																		_0: '0',
+																		_1: {
+																			ctor: '::',
+																			_0: '',
+																			_1: {
+																				ctor: '::',
+																				_0: '0',
+																				_1: {
+																					ctor: '::',
+																					_0: '0',
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										_1: {
+											ctor: '::',
+											_0: {
+												ctor: '::',
+												_0: '9',
+												_1: {
+													ctor: '::',
+													_0: 'dollop',
+													_1: {
+														ctor: '::',
+														_0: 'Dollop Coffee Co',
+														_1: {
+															ctor: '::',
+															_0: '41.794797',
+															_1: {
+																ctor: '::',
+																_0: '-87.598314',
+																_1: {
+																	ctor: '::',
+																	_0: 'Campus North Commons',
+																	_1: {
+																		ctor: '::',
+																		_0: '',
+																		_1: {
+																			ctor: '::',
+																			_0: '0',
+																			_1: {
+																				ctor: '::',
+																				_0: '',
+																				_1: {
+																					ctor: '::',
+																					_0: '0',
+																					_1: {
+																						ctor: '::',
+																						_0: '0',
+																						_1: {ctor: '[]'}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Data$shops = _user$project$Data$setShops(_user$project$Data$shopsArr);

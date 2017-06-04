@@ -1,0 +1,202 @@
+var _user$project$MenuPorts$changeShop = _elm_lang$core$Native_Platform.outgoingPort(
+	'changeShop',
+	function (v) {
+		return {
+			num: v.num,
+			id: v.id,
+			name: v.name,
+			pos: {lat: v.pos.lat, lng: v.pos.lng},
+			loc: v.loc,
+			etc: v.etc,
+			rating: v.rating,
+			entries: _elm_lang$core$Native_List.toArray(v.entries).map(
+				function (v) {
+					return {description: v.description, editing: v.editing, id: v.id};
+				}),
+			eid: v.eid
+		};
+	});
+var _user$project$MenuPorts$doChange = _elm_lang$core$Native_Platform.incomingPort(
+	'doChange',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (num) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (id) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (name) {
+							return A2(
+								_elm_lang$core$Json_Decode$andThen,
+								function (pos) {
+									return A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (loc) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (etc) {
+													return A2(
+														_elm_lang$core$Json_Decode$andThen,
+														function (rating) {
+															return A2(
+																_elm_lang$core$Json_Decode$andThen,
+																function (entries) {
+																	return A2(
+																		_elm_lang$core$Json_Decode$andThen,
+																		function (eid) {
+																			return _elm_lang$core$Json_Decode$succeed(
+																				{num: num, id: id, name: name, pos: pos, loc: loc, etc: etc, rating: rating, entries: entries, eid: eid});
+																		},
+																		A2(_elm_lang$core$Json_Decode$field, 'eid', _elm_lang$core$Json_Decode$int));
+																},
+																A2(
+																	_elm_lang$core$Json_Decode$field,
+																	'entries',
+																	_elm_lang$core$Json_Decode$list(
+																		A2(
+																			_elm_lang$core$Json_Decode$andThen,
+																			function (description) {
+																				return A2(
+																					_elm_lang$core$Json_Decode$andThen,
+																					function (editing) {
+																						return A2(
+																							_elm_lang$core$Json_Decode$andThen,
+																							function (id) {
+																								return _elm_lang$core$Json_Decode$succeed(
+																									{description: description, editing: editing, id: id});
+																							},
+																							A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int));
+																					},
+																					A2(_elm_lang$core$Json_Decode$field, 'editing', _elm_lang$core$Json_Decode$bool));
+																			},
+																			A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string)))));
+														},
+														A2(_elm_lang$core$Json_Decode$field, 'rating', _elm_lang$core$Json_Decode$int));
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'etc', _elm_lang$core$Json_Decode$string));
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'loc', _elm_lang$core$Json_Decode$string));
+								},
+								A2(
+									_elm_lang$core$Json_Decode$field,
+									'pos',
+									A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (lat) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (lng) {
+													return _elm_lang$core$Json_Decode$succeed(
+														{lat: lat, lng: lng});
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'lng', _elm_lang$core$Json_Decode$float));
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'lat', _elm_lang$core$Json_Decode$float))));
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'num', _elm_lang$core$Json_Decode$int)));
+var _user$project$MenuPorts$shopChanged = _elm_lang$core$Native_Platform.outgoingPort(
+	'shopChanged',
+	function (v) {
+		return {
+			num: v.num,
+			id: v.id,
+			name: v.name,
+			pos: {lat: v.pos.lat, lng: v.pos.lng},
+			loc: v.loc,
+			etc: v.etc,
+			rating: v.rating,
+			entries: _elm_lang$core$Native_List.toArray(v.entries).map(
+				function (v) {
+					return {description: v.description, editing: v.editing, id: v.id};
+				}),
+			eid: v.eid
+		};
+	});
+var _user$project$MenuPorts$gotChange = _elm_lang$core$Native_Platform.incomingPort(
+	'gotChange',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (num) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (id) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (name) {
+							return A2(
+								_elm_lang$core$Json_Decode$andThen,
+								function (pos) {
+									return A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (loc) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (etc) {
+													return A2(
+														_elm_lang$core$Json_Decode$andThen,
+														function (rating) {
+															return A2(
+																_elm_lang$core$Json_Decode$andThen,
+																function (entries) {
+																	return A2(
+																		_elm_lang$core$Json_Decode$andThen,
+																		function (eid) {
+																			return _elm_lang$core$Json_Decode$succeed(
+																				{num: num, id: id, name: name, pos: pos, loc: loc, etc: etc, rating: rating, entries: entries, eid: eid});
+																		},
+																		A2(_elm_lang$core$Json_Decode$field, 'eid', _elm_lang$core$Json_Decode$int));
+																},
+																A2(
+																	_elm_lang$core$Json_Decode$field,
+																	'entries',
+																	_elm_lang$core$Json_Decode$list(
+																		A2(
+																			_elm_lang$core$Json_Decode$andThen,
+																			function (description) {
+																				return A2(
+																					_elm_lang$core$Json_Decode$andThen,
+																					function (editing) {
+																						return A2(
+																							_elm_lang$core$Json_Decode$andThen,
+																							function (id) {
+																								return _elm_lang$core$Json_Decode$succeed(
+																									{description: description, editing: editing, id: id});
+																							},
+																							A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int));
+																					},
+																					A2(_elm_lang$core$Json_Decode$field, 'editing', _elm_lang$core$Json_Decode$bool));
+																			},
+																			A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string)))));
+														},
+														A2(_elm_lang$core$Json_Decode$field, 'rating', _elm_lang$core$Json_Decode$int));
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'etc', _elm_lang$core$Json_Decode$string));
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'loc', _elm_lang$core$Json_Decode$string));
+								},
+								A2(
+									_elm_lang$core$Json_Decode$field,
+									'pos',
+									A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (lat) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (lng) {
+													return _elm_lang$core$Json_Decode$succeed(
+														{lat: lat, lng: lng});
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'lng', _elm_lang$core$Json_Decode$float));
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'lat', _elm_lang$core$Json_Decode$float))));
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'num', _elm_lang$core$Json_Decode$int)));

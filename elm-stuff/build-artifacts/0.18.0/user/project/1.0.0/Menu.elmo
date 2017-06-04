@@ -1,0 +1,456 @@
+var _user$project$Menu$infoFooter = A2(
+	_elm_lang$html$Html$footer,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('info'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$p,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Double-click to edit a todo'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Menu$viewControls = F2(
+	function (visibility, entries) {
+		return A2(
+			_elm_lang$html$Html$footer,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('footer'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$hidden(
+						_elm_lang$core$List$isEmpty(entries)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+	});
+var _user$project$Menu$onEnter = function (msg) {
+	var isEnter = function (code) {
+		return _elm_lang$core$Native_Utils.eq(code, 13) ? _elm_lang$core$Json_Decode$succeed(msg) : _elm_lang$core$Json_Decode$fail('not ENTER');
+	};
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'keydown',
+		A2(_elm_lang$core$Json_Decode$andThen, isEnter, _elm_lang$html$Html_Events$keyCode));
+};
+var _user$project$Menu$newEntry = F2(
+	function (desc, id) {
+		return {description: desc, editing: false, id: id};
+	});
+var _user$project$Menu$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'NoOp':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			case 'Add':
+				var oldShop = model.current;
+				var newShop = _elm_lang$core$Native_Utils.update(
+					oldShop,
+					{
+						entries: _elm_lang$core$String$isEmpty(model.field) ? model.current.entries : A2(
+							_elm_lang$core$Basics_ops['++'],
+							model.current.entries,
+							{
+								ctor: '::',
+								_0: A2(_user$project$Menu$newEntry, model.field, model.current.eid),
+								_1: {ctor: '[]'}
+							}),
+						eid: oldShop.eid + 1
+					});
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop, field: ''}),
+					_1: _user$project$MenuPorts$shopChanged(newShop)
+				};
+			case 'UpdateField':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{field: _p0._0}),
+					{ctor: '[]'});
+			case 'EditingEntry':
+				var updateEntry = function (t) {
+					return _elm_lang$core$Native_Utils.eq(t.id, _p0._0) ? _elm_lang$core$Native_Utils.update(
+						t,
+						{editing: _p0._1}) : t;
+				};
+				var oldShop = model.current;
+				var newShop = _elm_lang$core$Native_Utils.update(
+					oldShop,
+					{
+						entries: A2(_elm_lang$core$List$map, updateEntry, oldShop.entries)
+					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop}),
+					{ctor: '[]'});
+			case 'UpdateEntry':
+				var updateEntry = function (t) {
+					return _elm_lang$core$Native_Utils.eq(t.id, _p0._0) ? _elm_lang$core$Native_Utils.update(
+						t,
+						{description: _p0._1}) : t;
+				};
+				var oldShop = model.current;
+				var newShop = _elm_lang$core$Native_Utils.update(
+					oldShop,
+					{
+						entries: A2(_elm_lang$core$List$map, updateEntry, oldShop.entries)
+					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop}),
+					{ctor: '[]'});
+			case 'Delete':
+				var oldShop = model.current;
+				var newShop = _elm_lang$core$Native_Utils.update(
+					oldShop,
+					{
+						entries: A2(
+							_elm_lang$core$List$filter,
+							function (t) {
+								return !_elm_lang$core$Native_Utils.eq(t.id, _p0._0);
+							},
+							oldShop.entries)
+					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop}),
+					{ctor: '[]'});
+			case 'ChangeVisibility':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{visibility: _p0._0}),
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{current: _p0._0, field: ''}),
+					{ctor: '[]'});
+		}
+	});
+var _user$project$Menu$emptyModel = {
+	current: A9(
+		_user$project$SharedModels$CoffeeShop,
+		0,
+		'',
+		'',
+		A2(_user$project$SharedModels$GMPos, 0, 0),
+		'',
+		'',
+		0,
+		{ctor: '[]'},
+		0),
+	field: '',
+	visibility: 'All'
+};
+var _user$project$Menu$init = {ctor: '_Tuple2', _0: _user$project$Menu$emptyModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Menu$Model = F3(
+	function (a, b, c) {
+		return {current: a, field: b, visibility: c};
+	});
+var _user$project$Menu$ChangeShop = function (a) {
+	return {ctor: 'ChangeShop', _0: a};
+};
+var _user$project$Menu$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _user$project$MenuPorts$doChange(_user$project$Menu$ChangeShop),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Menu$ChangeVisibility = function (a) {
+	return {ctor: 'ChangeVisibility', _0: a};
+};
+var _user$project$Menu$Delete = function (a) {
+	return {ctor: 'Delete', _0: a};
+};
+var _user$project$Menu$Add = {ctor: 'Add'};
+var _user$project$Menu$UpdateEntry = F2(
+	function (a, b) {
+		return {ctor: 'UpdateEntry', _0: a, _1: b};
+	});
+var _user$project$Menu$EditingEntry = F2(
+	function (a, b) {
+		return {ctor: 'EditingEntry', _0: a, _1: b};
+	});
+var _user$project$Menu$viewEntry = function (todo) {
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$classList(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'editing', _1: todo.editing},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('view'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$label,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onDoubleClick(
+								A2(_user$project$Menu$EditingEntry, todo.id, true)),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(todo.description),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('destroy'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_user$project$Menu$Delete(todo.id)),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('edit'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value(todo.description),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$name('title'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$id(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'todo-',
+											_elm_lang$core$Basics$toString(todo.id))),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(
+											_user$project$Menu$UpdateEntry(todo.id)),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onBlur(
+												A2(_user$project$Menu$EditingEntry, todo.id, false)),
+											_1: {
+												ctor: '::',
+												_0: _user$project$Menu$onEnter(
+													A2(_user$project$Menu$EditingEntry, todo.id, false)),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Menu$viewKeyedEntry = function (todo) {
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Basics$toString(todo.id),
+		_1: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Menu$viewEntry, todo)
+	};
+};
+var _user$project$Menu$viewEntries = F2(
+	function (visibility, entries) {
+		var cssVisibility = _elm_lang$core$List$isEmpty(entries) ? 'hidden' : 'visible';
+		return A2(
+			_elm_lang$html$Html$section,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('main'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'visibility', _1: cssVisibility},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html_Keyed$ul,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('todo-list'),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, _user$project$Menu$viewKeyedEntry, entries)),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Menu$UpdateField = function (a) {
+	return {ctor: 'UpdateField', _0: a};
+};
+var _user$project$Menu$viewInput = function (task) {
+	return A2(
+		_elm_lang$html$Html$header,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('header'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h1,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Notes'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('new-todo'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$placeholder('add notes'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$autofocus(true),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$value(task),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$name('newTodo'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onInput(_user$project$Menu$UpdateField),
+											_1: {
+												ctor: '::',
+												_0: _user$project$Menu$onEnter(_user$project$Menu$Add),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Menu$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('todomvc-wrapper'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'visibility', _1: 'hidden'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$section,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('todoapp'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Menu$viewInput, model.field),
+					_1: {
+						ctor: '::',
+						_0: A3(_elm_lang$html$Html_Lazy$lazy2, _user$project$Menu$viewEntries, model.visibility, model.current.entries),
+						_1: {
+							ctor: '::',
+							_0: A3(_elm_lang$html$Html_Lazy$lazy2, _user$project$Menu$viewControls, model.visibility, model.current.entries),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Menu$infoFooter,
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Menu$main = _elm_lang$html$Html$program(
+	{
+		init: _user$project$Menu$init,
+		view: _user$project$Menu$view,
+		update: _user$project$Menu$update,
+		subscriptions: function (_p1) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();
+var _user$project$Menu$NoOp = {ctor: 'NoOp'};

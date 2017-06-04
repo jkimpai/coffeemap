@@ -1,0 +1,56 @@
+var _user$project$GMaps$moveMap = _elm_lang$core$Native_Platform.outgoingPort(
+	'moveMap',
+	function (v) {
+		return {lat: v.lat, lng: v.lng};
+	});
+var _user$project$GMaps$reset = _elm_lang$core$Native_Platform.outgoingPort(
+	'reset',
+	function (v) {
+		return {lat: v.lat, lng: v.lng};
+	});
+var _user$project$GMaps$hardReset = _elm_lang$core$Native_Platform.outgoingPort(
+	'hardReset',
+	function (v) {
+		return {lat: v.lat, lng: v.lng};
+	});
+var _user$project$GMaps$getShop = _elm_lang$core$Native_Platform.outgoingPort(
+	'getShop',
+	function (v) {
+		return v;
+	});
+var _user$project$GMaps$gotShop = _elm_lang$core$Native_Platform.incomingPort('gotShop', _elm_lang$core$Json_Decode$string);
+var _user$project$GMaps$star = _elm_lang$core$Native_Platform.outgoingPort(
+	'star',
+	function (v) {
+		return v;
+	});
+var _user$project$GMaps$mapMoved = _elm_lang$core$Native_Platform.incomingPort(
+	'mapMoved',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (lat) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (lng) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{lat: lat, lng: lng});
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'lng', _elm_lang$core$Json_Decode$float));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'lat', _elm_lang$core$Json_Decode$float)));
+var _user$project$GMaps$saveShop = _elm_lang$core$Native_Platform.outgoingPort(
+	'saveShop',
+	function (v) {
+		return _elm_lang$core$Native_List.toArray(v).map(
+			function (v) {
+				return v;
+			});
+	});
+var _user$project$GMaps$requestShop = _elm_lang$core$Native_Platform.outgoingPort(
+	'requestShop',
+	function (v) {
+		return v;
+	});
+var _user$project$GMaps$receiveShop = _elm_lang$core$Native_Platform.incomingPort(
+	'receiveShop',
+	_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string));

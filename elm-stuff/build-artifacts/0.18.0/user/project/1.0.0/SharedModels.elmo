@@ -1,0 +1,29 @@
+var _user$project$SharedModels$GMPos = F2(
+	function (a, b) {
+		return {lat: a, lng: b};
+	});
+var _user$project$SharedModels$Entry = F3(
+	function (a, b, c) {
+		return {description: a, editing: b, id: c};
+	});
+var _user$project$SharedModels$CoffeeShop = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {num: a, id: b, name: c, pos: d, loc: e, field: f, rating: g, notes: h, eid: i, favorite: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};

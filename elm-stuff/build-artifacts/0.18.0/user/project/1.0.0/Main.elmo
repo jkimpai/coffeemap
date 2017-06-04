@@ -1,0 +1,1147 @@
+var _user$project$Main$infoFooter = A2(
+	_elm_lang$html$Html$footer,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('info'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$p,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('double-click to edit a note'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$onEnter = function (msg) {
+	var isEnter = function (code) {
+		return _elm_lang$core$Native_Utils.eq(code, 13) ? _elm_lang$core$Json_Decode$succeed(msg) : _elm_lang$core$Json_Decode$fail('not ENTER');
+	};
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'keydown',
+		A2(_elm_lang$core$Json_Decode$andThen, isEnter, _elm_lang$html$Html_Events$keyCode));
+};
+var _user$project$Main$drawRating = function (num) {
+	var fLoop = F2(
+		function (n, msg) {
+			fLoop:
+			while (true) {
+				var _p0 = n;
+				if (_p0 === 0) {
+					return msg;
+				} else {
+					var _v1 = _p0 - 1,
+						_v2 = A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$img,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$src('icons/fillcup.svg'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'width', _1: '40px'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'height', _1: '60px'},
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						},
+						msg);
+					n = _v1;
+					msg = _v2;
+					continue fLoop;
+				}
+			}
+		});
+	var uLoop = F2(
+		function (n, msg) {
+			uLoop:
+			while (true) {
+				var _p1 = n;
+				if (_p1 === 0) {
+					return msg;
+				} else {
+					var _v4 = _p1 - 1,
+						_v5 = A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$img,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$src('icons/emptycup.svg'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'width', _1: '40px'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'height', _1: '60px'},
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						},
+						msg);
+					n = _v4;
+					msg = _v5;
+					continue uLoop;
+				}
+			}
+		});
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(
+			fLoop,
+			num,
+			{ctor: '[]'}),
+		A2(
+			uLoop,
+			5 - num,
+			{ctor: '[]'}));
+};
+var _user$project$Main$movePos = F2(
+	function (pos, direction) {
+		var _p2 = direction;
+		switch (_p2.ctor) {
+			case 'North':
+				return _elm_lang$core$Native_Utils.update(
+					pos,
+					{lat: pos.lat + 5.0e-3});
+			case 'South':
+				return _elm_lang$core$Native_Utils.update(
+					pos,
+					{lat: pos.lat - 5.0e-3});
+			case 'West':
+				return _elm_lang$core$Native_Utils.update(
+					pos,
+					{lng: pos.lng - 5.0e-3});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					pos,
+					{lng: pos.lng + 5.0e-3});
+		}
+	});
+var _user$project$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {pos: a, current: b, shops: c, tempNotes: d, anySelected: e};
+	});
+var _user$project$Main$init = function () {
+	var uchicago = A2(_user$project$SharedModels$GMPos, 41.792, -87.5987);
+	return {
+		ctor: '_Tuple2',
+		_0: A5(
+			_user$project$Main$Model,
+			uchicago,
+			A2(_user$project$Data$getCS, 'none', _user$project$Data$shops),
+			_user$project$Data$shops,
+			'',
+			false),
+		_1: _user$project$GMaps$reset(uchicago)
+	};
+}();
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'Find':
+				var shop = A2(_user$project$Data$getCS, _p3._0, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{pos: shop.pos, current: shop, anySelected: true}),
+					_1: _user$project$GMaps$getShop(shop.num)
+				};
+			case 'Move':
+				var newPos = A2(_user$project$Main$movePos, model.pos, _p3._0);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{pos: newPos}),
+					_1: _user$project$GMaps$moveMap(newPos)
+				};
+			case 'Reset':
+				return _user$project$Main$init;
+			case 'MapMoved':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{pos: _p3._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'GotShop':
+				var shop = A2(_user$project$Data$getCS, _p3._0, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{pos: shop.pos, current: shop, anySelected: true}),
+					_1: _user$project$GMaps$requestShop(shop.id)
+				};
+			case 'SetRating':
+				var n = model.current.num;
+				var shop = A2(_elm_lang$core$Array$get, n, model.shops);
+				var _p4 = shop;
+				if (_p4.ctor === 'Just') {
+					var newShop = _elm_lang$core$Native_Utils.update(
+						_p4._0,
+						{rating: _p3._0});
+					var newShops = A3(_elm_lang$core$Array$set, n, newShop, model.shops);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{current: newShop, shops: newShops}),
+						_1: _user$project$GMaps$saveShop(
+							_user$project$Data$toStringList(newShop))
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'ShowStar':
+				var num = model.current.num;
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _user$project$GMaps$star(num)
+				};
+			case 'Add':
+				var newShop = _user$project$Notes$addEntry(model.current);
+				var newShops = A3(_elm_lang$core$Array$set, newShop.num, newShop, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop, shops: newShops}),
+					_1: _user$project$GMaps$saveShop(
+						_user$project$Data$toStringList(newShop))
+				};
+			case 'UpdateEntry':
+				var newShop = A3(_user$project$Notes$updateEntry, model.current, _p3._0, _p3._1);
+				var newShops = A3(_elm_lang$core$Array$set, newShop.num, newShop, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop, shops: newShops}),
+					_1: _user$project$GMaps$saveShop(
+						_user$project$Data$toStringList(newShop))
+				};
+			case 'EditingEntry':
+				var newShop = A3(_user$project$Notes$editingEntry, model.current, _p3._0, _p3._1);
+				var newShops = A3(_elm_lang$core$Array$set, newShop.num, newShop, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop, shops: newShops}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Delete':
+				var newShop = A2(_user$project$Notes$delete, model.current, _p3._0);
+				var newShops = A3(_elm_lang$core$Array$set, newShop.num, newShop, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop, shops: newShops}),
+					_1: _user$project$GMaps$saveShop(
+						_user$project$Data$toStringList(newShop))
+				};
+			case 'UpdateField':
+				var newShop = A2(_user$project$Notes$updateField, model.current, _p3._0);
+				var newShops = A3(_elm_lang$core$Array$set, newShop.num, newShop, model.shops);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: newShop, shops: newShops}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'LoadShop':
+				var _p5 = _p3._0;
+				if (_elm_lang$core$Native_Utils.eq(
+					_p5,
+					{ctor: '[]'})) {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var shop = _user$project$Data$fromStringList(_p5);
+					var newShops = A3(_elm_lang$core$Array$set, shop.num, shop, model.shops);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{current: shop, shops: newShops}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				var uchicago = A2(_user$project$SharedModels$GMPos, 41.792, -87.5987);
+				return {
+					ctor: '_Tuple2',
+					_0: A5(
+						_user$project$Main$Model,
+						uchicago,
+						A2(_user$project$Data$getCS, 'none', _user$project$Data$shops),
+						_user$project$Data$shops,
+						'',
+						false),
+					_1: _user$project$GMaps$hardReset(uchicago)
+				};
+		}
+	});
+var _user$project$Main$ClearSaved = {ctor: 'ClearSaved'};
+var _user$project$Main$UpdateField = function (a) {
+	return {ctor: 'UpdateField', _0: a};
+};
+var _user$project$Main$LoadShop = function (a) {
+	return {ctor: 'LoadShop', _0: a};
+};
+var _user$project$Main$Delete = function (a) {
+	return {ctor: 'Delete', _0: a};
+};
+var _user$project$Main$EditingEntry = F2(
+	function (a, b) {
+		return {ctor: 'EditingEntry', _0: a, _1: b};
+	});
+var _user$project$Main$UpdateEntry = F2(
+	function (a, b) {
+		return {ctor: 'UpdateEntry', _0: a, _1: b};
+	});
+var _user$project$Main$viewEntry = function (notes) {
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$classList(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'editing', _1: notes.editing},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('view'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$label,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onDoubleClick(
+								A2(_user$project$Main$EditingEntry, notes.id, true)),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(notes.description),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('destroy'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_user$project$Main$Delete(notes.id)),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('edit'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value(notes.description),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$name('title'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$id(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'note-',
+											_elm_lang$core$Basics$toString(notes.id))),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(
+											_user$project$Main$UpdateEntry(notes.id)),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onBlur(
+												A2(_user$project$Main$EditingEntry, notes.id, false)),
+											_1: {
+												ctor: '::',
+												_0: _user$project$Main$onEnter(
+													A2(_user$project$Main$EditingEntry, notes.id, false)),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$viewKeyedEntry = function (todo) {
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Basics$toString(todo.id),
+		_1: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewEntry, todo)
+	};
+};
+var _user$project$Main$viewEntries = function (entries) {
+	var cssVisibility = _elm_lang$core$List$isEmpty(entries) ? 'hidden' : 'visible';
+	return A2(
+		_elm_lang$html$Html$section,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('main'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'visibility', _1: cssVisibility},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html_Keyed$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('notes-list'),
+					_1: {ctor: '[]'}
+				},
+				A2(_elm_lang$core$List$map, _user$project$Main$viewKeyedEntry, entries)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$Add = {ctor: 'Add'};
+var _user$project$Main$viewInput = function (task) {
+	return A2(
+		_elm_lang$html$Html$header,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('header'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h1,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('notes'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('new-note'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$placeholder('add notes'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$autofocus(true),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$value(task),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$name('newTodo'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$UpdateField),
+											_1: {
+												ctor: '::',
+												_0: _user$project$Main$onEnter(_user$project$Main$Add),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$ShowStar = {ctor: 'ShowStar'};
+var _user$project$Main$SetRating = function (a) {
+	return {ctor: 'SetRating', _0: a};
+};
+var _user$project$Main$GotShop = function (a) {
+	return {ctor: 'GotShop', _0: a};
+};
+var _user$project$Main$MapMoved = function (a) {
+	return {ctor: 'MapMoved', _0: a};
+};
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _user$project$GMaps$mapMoved(_user$project$Main$MapMoved),
+			_1: {
+				ctor: '::',
+				_0: _user$project$GMaps$receiveShop(_user$project$Main$LoadShop),
+				_1: {
+					ctor: '::',
+					_0: _user$project$GMaps$gotShop(_user$project$Main$GotShop),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$Reset = {ctor: 'Reset'};
+var _user$project$Main$Move = function (a) {
+	return {ctor: 'Move', _0: a};
+};
+var _user$project$Main$Find = function (a) {
+	return {ctor: 'Find', _0: a};
+};
+var _user$project$Main$East = {ctor: 'East'};
+var _user$project$Main$West = {ctor: 'West'};
+var _user$project$Main$South = {ctor: 'South'};
+var _user$project$Main$North = {ctor: 'North'};
+var _user$project$Main$view = function (model) {
+	var myStyle = _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'padding', _1: '5px'},
+			_1: {ctor: '[]'}
+		});
+	var showCoffee = model.anySelected ? A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'padding-top', _1: '15px'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.current.name),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h3,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(model.current.loc),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						},
+						_user$project$Main$drawRating(model.current.rating)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: myStyle,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Rating: '),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$Main$SetRating(1)),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(' 1 '),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$Main$SetRating(2)),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(' 2 '),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$Main$SetRating(3)),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(' 3 '),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_user$project$Main$SetRating(4)),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(' 4 '),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$button,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onClick(
+																_user$project$Main$SetRating(5)),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text(' 5 '),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$button,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowStar),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Favorite'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('notes-wrapper'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'visibility', _1: 'hidden'},
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$section,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('notes'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewInput, model.current.field),
+											_1: {
+												ctor: '::',
+												_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewEntries, model.current.notes),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {
+										ctor: '::',
+										_0: _user$project$Main$infoFooter,
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}) : A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'display', _1: 'inline-text'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Select a coffee shop from above or on the map!'),
+			_1: {ctor: '[]'}
+		});
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin', _1: '15px'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Navigate: '),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('nav'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Reset),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Re-Center'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('nav'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$Main$Move(_user$project$Main$North)),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('North'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$button,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('nav'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$Main$Move(_user$project$Main$South)),
+											_1: {ctor: '[]'}
+										}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('South'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('nav'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$Main$Move(_user$project$Main$West)),
+												_1: {ctor: '[]'}
+											}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('West'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('nav'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$Main$Move(_user$project$Main$East)),
+													_1: {ctor: '[]'}
+												}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('East'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('shps'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_user$project$Main$Find('cobb')),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('1. Cobb Cafe'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('shps'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$Main$Find('exlib')),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('2. Ex Libris'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$button,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('shps'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$Main$Find('hallowed')),
+											_1: {ctor: '[]'}
+										}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('3. Hallowed Grounds'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('shps'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$Main$Find('cshop')),
+												_1: {ctor: '[]'}
+											}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('4. C-Shop'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('shps'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$Main$Find('miriams')),
+													_1: {ctor: '[]'}
+												}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('5. Miriam\'s Cafe'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('shps'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_user$project$Main$Find('harper')),
+														_1: {ctor: '[]'}
+													}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('6. Harper Cafe'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('shps'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onClick(
+																_user$project$Main$Find('plein')),
+															_1: {ctor: '[]'}
+														}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('7. Plein Air'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$button,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('shps'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onClick(
+																	_user$project$Main$Find('div')),
+																_1: {ctor: '[]'}
+															}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('8. Grounds of Being'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$button,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('shps'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onClick(
+																		_user$project$Main$Find('dollop')),
+																	_1: {ctor: '[]'}
+																}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('9. Dollop Coffee Co'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: myStyle,
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('reset'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ClearSaved),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Reset All'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: showCoffee,
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
